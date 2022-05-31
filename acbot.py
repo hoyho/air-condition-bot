@@ -39,7 +39,7 @@ def turn_on_my_air_conditioner(conn="Android://127.0.0.1:5037/CB512AAPKE"):
 
     print("launch wechat ...")
     app = dev.start_app("com.tencent.mm")
-    time.sleep(2)
+    time.sleep(3)
 
     print("swipe down to mini app ...")
     swipe((200,300),(200,1100))
@@ -47,9 +47,10 @@ def turn_on_my_air_conditioner(conn="Android://127.0.0.1:5037/CB512AAPKE"):
 
     #click stared hualing icon
     #poco("com.tencent.mm:id/dtj").click()
+    sleep(1)
     print("waiting  hualing icon ...")
     touch(Template("resource/hualing_icon.png"))
-    time.sleep(2)
+    time.sleep(6)
 
     print("wait for 搜索新设备 ...")
     search_new_btn = poco(text="搜索新设备")
@@ -57,18 +58,18 @@ def turn_on_my_air_conditioner(conn="Android://127.0.0.1:5037/CB512AAPKE"):
 
     print("enter my device, it may take seconds ...")
     touch(Template("resource/device_and_blt.png"))
-    sleep(5)
+    sleep(6)
 
     print("turning on air conditioner ...")
     turnon_btn = poco(text="打开空调")
     poco.wait_for_all(turnon_btn,timeout=60)
     turnon_btn.click()
-    sleep(2)
+    sleep(3)
 
     more_btn = poco(text="更多功能")
     poco.wait_for_all(more_btn)
     more_btn.click()
-    sleep(4)
+    sleep(5)
 
 
     eco_btn_txt = poco(text="ECO")
@@ -78,7 +79,7 @@ def turn_on_my_air_conditioner(conn="Android://127.0.0.1:5037/CB512AAPKE"):
         eco_btn_txt.click()
     elif eco_btn_pic.exists():
         eco_btn_pic.click()
-    sleep(2)
+    sleep(3)
 
     keyevent("BACK")
     
@@ -102,12 +103,10 @@ def job():
 if __name__ == '__main__':
     print("on start ...")
     print("set up cron")
-    #turn_on_my_air_conditioner()
-    #schedule.every().day.at("00:34").do(job)
+    turn_on_my_air_conditioner()
     schedule.every().day.at("06:00").do(turn_on_my_air_conditioner)
     while True:
         schedule.run_pending()   # all all scheduled jobs
         time.sleep(1)
-    #schedule.every().day.at("06:00").do(turn_on_my_air_conditioner)
 
 

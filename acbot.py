@@ -50,21 +50,31 @@ def turn_on_my_air_conditioner(conn="Android://127.0.0.1:5037/CB512AAPKE"):
     sleep(1)
     print("waiting  hualing icon ...")
     touch(Template("resource/hualing_icon.png"))
-    time.sleep(6)
+    time.sleep(8)
 
     print("wait for 搜索新设备 ...")
     search_new_btn = poco(text="搜索新设备")
-    poco.wait_for_any(search_new_btn,timeout=60)
+    air_icon = Template("resource/device_and_blt.png")
+    wait(air_icon)
+    #poco.wait_for_any([search_new_btn,air_icon]),timeout=60)
 
+    time.sleep(8)
     print("enter my device, it may take seconds ...")
     touch(Template("resource/device_and_blt.png"))
-    sleep(6)
-
-    print("turning on air conditioner ...")
-    turnon_btn = poco(text="打开空调")
-    poco.wait_for_all(turnon_btn,timeout=60)
-    turnon_btn.click()
-    sleep(3)
+    sleep(10)
+    
+    turnoff_btn = Template("resource/turnoff_btn.png")
+    if not exists(turnoff_btn):
+        print("turning on air conditioner ...")
+        #turnon_btn = poco(text="打开空调")
+        turnon_btn = Template("resource/turnon_btn.png")
+        wait(turnon_btn)
+        touch(turnon_btn)
+        #poco.wait_for_all(turnon_btn,timeout=60)
+        #turnon_btn.click()
+    else:
+        print("device is on,no need to start ")
+    sleep(5)
 
     more_btn = poco(text="更多功能")
     poco.wait_for_all(more_btn)
@@ -85,26 +95,35 @@ def turn_on_my_air_conditioner(conn="Android://127.0.0.1:5037/CB512AAPKE"):
     
     sleep(1)
     prevent_btn = Template("resource/prevent_direct.png")
-    poco.wait_for_all([prevent_btn])
-    prevent_btn.click()
+    wait(prevent_btn)
+    touch(prevent_btn)
+    # poco.wait_for_all([prevent_btn])
+    # prevent_btn.click()
     sleep(1)
     
-
     dev.home()
+    print("done ~~~~~~~~~~~~")
 
 
 def job():
-    try:
-        turn_on_my_air_conditioner()
-    except Exception as e:
-        print(e)
-        pass
+    i = 1
+    ok = False
+    while i < 5 and (not ok):
+        print("try at "+ str(i))
+        try:
+            turn_on_my_air_conditioner()
+            ok = True
+        except Exception as e:
+            print(e)
+        sleep(3)
+        i = i +1
 
 if __name__ == '__main__':
     print("on start ...")
     print("set up cron")
-    turn_on_my_air_conditioner()
-    schedule.every().day.at("06:00").do(turn_on_my_air_conditioner)
+    #job()
+    #turn_on_my_air_conditioner()
+    schedule.every().day.at("06:00").do(job)
     while True:
         schedule.run_pending()   # all all scheduled jobs
         time.sleep(1)
